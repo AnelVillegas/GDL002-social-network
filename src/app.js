@@ -92,11 +92,12 @@ const post = () => {
   let postWritten = document.querySelector('#post').value;
   db.collection('post').add({
     post: postWritten,
-
-  })
+  
+ })
     .then(function (docRef) {
       document.querySelector('#post').value = '';
       console.log("Document written with ID: ", docRef.id);
+    
     })
     .catch(function (error) {
       console.error("Error adding document: ", error);
@@ -106,52 +107,76 @@ const post = () => {
 //Print data on screen
 let showPost = document.querySelector('#showPost');
 db.collection('post').onSnapshot((querySnapshot) => {
-  showPost.innerHTML = '';
-  querySnapshot.forEach((doc) => {
   
-    console.log(`${doc.id} => ${doc.data()}`);
+  showPost.innerHTML = '';
+  querySnapshot.forEach((docRef) => {
+  let idPost=(`${docRef.id}`);
+   
+    //console.log(idPost);
     showPost.innerHTML += `
-       <div id="WrittenPost">${doc.data().post}</div>
+       <div id="WrittenPost">${docRef.data().post}</div>
        <button class="deletePost">Eliminar</button>
+      
+       
        `;
   });
   eventButton();
 });
-function eventButton() {
-  let deleteButton = document.querySelectorAll('.deletePost');
-  console.log(deleteButton);
-  deleteButton.forEach((button) => {
-    button.addEventListener('click', deleteWrittenPost);
 
+  
+function eventButton()  { 
+  db.collection('post').onSnapshot((querySnapshot) => {
+     querySnapshot.forEach((docRef) => {
+     //
+     console.log(`${docRef.id}`);
+     let idPosted=(`${docRef.id}`);
+    
+      
+        } );
+        const deleteButton = document.querySelectorAll('.deletePost');
+        console.log(deleteButton);
+        deleteButton.forEach((button)=> {       
+          button.addEventListener('click',  () => {
+           deleteWrittenPost(docRef);
+           
+           function deleteWrittenPost(docRef) {
+  
+            console.log(`${docRef.id}`);
+        
+            
+          } 
+          } );
+        
+        } );
   });
 }
 
 
+
+
+
 //Delete posts
-function deleteWrittenPost() {
-  //let idPost = db.collection("post").doc("post");
-  //idPost.get().then(function(doc) {
-   // if (doc.exists) {
-    console.log(post.doc(post));
-     //   console.log("Document data:", doc.data());
-   // } else {
-        // doc.data() will be undefined in this case
-     //   console.log("No such document!");
-   // }
-}//).catch(function(error) {
- //console.log("Error getting document:", error);
+//let eachIdPost=querySnapshot.forEach((docRef) => {
+  //let idPost=(`${docRef.id}`)
   
+function deleteWrittenPost(eachId) {
   
- 
- /*db.collection("post").doc().delete().then(function () {
-    console.log("Document successfully deleted!");
-  }).catch(function (error) {
-    console.error("Error removing document: ", error);
-    deleted id ${doc.id.target.dataset.deleteButton}
-  });*/
-  //}
-  //);
-//}
+    console.log(`${docRef.id}`);
+
+    
+  } 
+
+   /* (db.collection("post").docRef(docRef.id).delete().then(function () {
+     console.log("Document successfully deleted!");
+     }).catch(function (error) {
+     console.error("Error removing document: ", error);
+     //deleted id ${doc.id.target.dataset.deleteButton}
+     });*/
+  
+
+  
+       
+    
 
 
 
@@ -164,7 +189,7 @@ function deleteWrittenPost() {
 registerButton.addEventListener('click', register);
 loginButton.addEventListener('click', login);
 postButton.addEventListener('click', post);
-//deleteButton.addEventListener('click',deletePost);
+/*deleteButton.addEventListener('click',deletePost);
 //<button deleteButton id="`${doc.id}`">Eliminar</button>
 //removeBtn.addEventListener('click', e => {
-//console.log(`deleted row ${e.target.dataset.removeButtonId}`)
+console.log(`deleted row ${e.target.dataset.removeButtonId}`)*/
